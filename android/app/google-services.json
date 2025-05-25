@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634509069834",
+    "project_id": "majstornaklikapp-5f74c",
+    "storage_bucket": "majstornaklikapp-5f74c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634509069834:android:dd74ee7517479e497559f3",
+        "android_client_info": {
+          "package_name": "com.example.majstor_na_klik_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9I5ztFuhc_IT2OM4Mx6IkHSzOwJRSh2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
