@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:majstor_na_klik_app/screens/majstor_dashboard.dart';
+import 'package:majstor_na_klik_app/screens/user_home_screen.dart';
 
 class LoginProvider extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -17,16 +20,46 @@ class LoginProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text,
-      );
-      // Uspješna prijava - ovdje možete navigirati na sljedeći ekran
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text,
+          );
+      final User? user = userCredential.user;
+      if (user != null) {
+        final DocumentSnapshot userDoc =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get();
+        if (userDoc.exists && userDoc.data() != null) {
+          final userData = userDoc.data() as Map<String, dynamic>;
+          final String role = userData['role'];
+
+          if (role == 'korisnik') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const UserHomeScreen()),
+            );
+          } else if (role == 'majstor') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MajstorDashboard()),
+            );
+          } else {
+            // Ako uloga nije definisana ili je nepoznata, preusmjerite na neki default ekran ili prikažite grešku
+            print('Nepoznata uloga korisnika.');
+            // Možda navigirate na ekran za ažuriranje profila ili prikažete poruku
+          }
+        } else {
+          print('Podaci o korisniku nisu pronađeni u Firestore.');
+          // Možda navigirate na ekran za ažuriranje profila
+        }
+      }
       print('Prijava uspješna!');
     } on FirebaseAuthException catch (e) {
       errorMessage = _handleFirebaseAuthError(e.code);
       print('Firebase Auth Error: ${e.code} - ${e.message}');
-      // Prikazati error poruku korisniku putem SnackBar-a ili na UI-u
     } catch (e) {
       errorMessage = 'Došlo je do neočekivane greške.';
       print('Unexpected login error: $e');

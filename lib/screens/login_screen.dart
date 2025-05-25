@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   if (loginProvider.errorMessage != null)
                     Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
+                      padding: EdgeInsets.only(top: 1.0),
                       child: Text(
                         loginProvider.errorMessage!,
                         style: const TextStyle(color: Colors.red),
@@ -114,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   const SizedBox(height: 16.0),
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     child: TextButton(
                       onPressed: () {
                         // TODO: Implementirajte navigaciju ka stranici za reset lozinke

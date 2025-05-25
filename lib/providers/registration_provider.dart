@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -25,23 +26,32 @@ class RegistrationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text,
-      );
-      // Uspješna registracija - ovdje možete navigirati na ekran za prijavu ili neki drugi ekran
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text,
+          );
+      final User? user = userCredential.user;
+      if (user != null) {
+        // Po defaultu, registrovani korisnik je 'korisnik'
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'email': emailController.text.trim(),
+          'role': 'korisnik', // Postavite defaultnu ulogu
+          // Možete dodati i druga polja ovdje ako želite (npr. displayName)
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registracija uspješna! Molimo prijavite se.'),
+          ),
+        );
+        Navigator.of(context).pop(); // Vratite se na login ekran
+      }
       print('Registracija uspješna!');
-      // Možda prikažete SnackBar i preusmjerite na login ekran
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registracija uspješna! Molimo prijavite se.'),
-        ),
-      );
-      Navigator.of(context).pop(); // Vratite se na login ekran
     } on FirebaseAuthException catch (e) {
       errorMessage = _handleFirebaseAuthError(e.code);
       print('Firebase Auth Error (Registration): ${e.code} - ${e.message}');
-      // Prikazati error poruku korisniku putem SnackBar-a ili na UI-u
     } catch (e) {
       errorMessage = 'Došlo je do neočekivane greške prilikom registracije.';
       print('Unexpected registration error: $e');
