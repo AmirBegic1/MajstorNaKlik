@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -13,6 +16,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _displayNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+  final _addressController = TextEditingController();
+  File? _profileImage;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -35,7 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (userDoc.exists && userDoc.data() != null) {
           final userData = userDoc.data() as Map<String, dynamic>;
           _displayNameController.text = userData['displayName'] ?? '';
-          _phoneNumberController.text = userData['phoneNumber'] ?? '';
+          // TODO: Učitajte trenutnu sliku profila ako postoji
         }
       } catch (e) {
         setState(
@@ -46,30 +51,63 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isLoading = false);
   }
 
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
   Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       final User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
+      String? profileImageUrl;
+
+      if (_profileImage != null) {
         try {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .update({
-                'displayName': _displayNameController.text.trim(),
-                'phoneNumber': _phoneNumberController.text.trim(),
-                // Dodajte ostala polja za uređivanje po potrebi
-              });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profil uspješno ažuriran.')),
-          );
-          Navigator.of(context).pop(); // Vratite se na ekran profila
+          final firebase_storage.Reference storageRef = firebase_storage
+              .FirebaseStorage
+              .instance
+              .ref()
+              .child(
+                'users/${user!.uid}/profile.jpg',
+              ); // Naziv slike može biti jedinstveniji
+
+          await storageRef.putFile(_profileImage!);
+          profileImageUrl = await storageRef.getDownloadURL();
         } catch (e) {
           setState(
-            () =>
-                _errorMessage = 'Došlo je do greške pri ažuriranju profila: $e',
+            () => _errorMessage = 'Došlo je do greške pri učitavanju slike: $e',
           );
+          setState(() => _isLoading = false);
+          return;
         }
+      }
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .update({
+              'displayName': _displayNameController.text.trim(),
+              if (profileImageUrl != null) 'profileImageUrl': profileImageUrl,
+              // TODO: Dodajte ostala polja za uređivanje
+            });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profil uspješno ažuriran.')),
+        );
+        Navigator.of(context).pop(); // Vratite se na ekran profila
+      } catch (e) {
+        setState(
+          () => _errorMessage = 'Došlo je do greške pri ažuriranju profila: $e',
+        );
       }
       setState(() => _isLoading = false);
     }
@@ -95,6 +133,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage:
+                              _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : const AssetImage('assets/avatar.jpg')
+                                      as ImageProvider, // Koristite defaultnu sliku
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
                       TextFormField(
                         controller: _displayNameController,
                         decoration: const InputDecoration(
@@ -114,10 +164,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           labelText: 'Broj telefona',
                         ),
                         keyboardType: TextInputType.phone,
-                        // Dodajte validaciju za broj telefona ako je potrebno
                       ),
                       const SizedBox(height: 20.0),
-                      // Ovdje možete dodati i druga polja za uređivanje
+                      TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(labelText: 'Adresa'),
+                      ),
+                      const SizedBox(height: 20.0),
+                      // TODO: Dodajte ostala polja za uređivanje (broj telefona, adresa, specijalizacije itd.)
                     ],
                   ),
                 ),

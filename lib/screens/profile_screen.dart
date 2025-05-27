@@ -97,10 +97,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Center(
+                    Center(
                       child: CircleAvatar(
                         radius: 60,
-                        child: Icon(Icons.person, size: 80),
+                        backgroundImage:
+                            _userData?['profileImageUrl'] != null
+                                ? NetworkImage(
+                                  _userData!['profileImageUrl'] as String,
+                                )
+                                : const AssetImage('assets/avatar.jpg')
+                                    as ImageProvider, // Dodajte defaultnu sliku u assets
                       ),
                     ),
                     const SizedBox(height: 20.0),
@@ -128,6 +134,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _userData?['phoneNumber'] ?? 'N/A',
                       ), // Pretpostavljamo da imate phoneNumber
                     ),
+                    const SizedBox(height: 20.0),
+                    // Dodatne informacije specifične za majstora
+                    if (_userData?['role'] == 'majstor') ...[
+                      if (_userData?['specializations'] != null)
+                        ListTile(
+                          leading: const Icon(Icons.build),
+                          title: Text(
+                            (_userData!['specializations'] as List).join(', '),
+                          ),
+                        ),
+                      if (_userData?['hourlyRate'] != null)
+                        ListTile(
+                          leading: const Icon(Icons.attach_money),
+                          title: Text(
+                            'Cijena po satu: ${_userData!['hourlyRate']}',
+                          ),
+                        ),
+                      if (_userData?['description'] != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Opis: ${_userData!['description']}',
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                      // TODO: Prikaz galerije radova
+                    ],
                     const SizedBox(height: 20.0),
                     const Text(
                       'Ostale opcije',
