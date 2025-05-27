@@ -38,6 +38,8 @@ class RegistrationProvider extends ChangeNotifier {
           'uid': user.uid,
           'email': emailController.text.trim(),
           'role': 'korisnik', // Postavite defaultnu ulogu
+          'displayName': '', // Dodajte polja po potrebi
+          'phoneNumber': '',
           // Možete dodati i druga polja ovdje ako želite (npr. displayName)
         });
 
