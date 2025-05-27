@@ -18,6 +18,35 @@ class JobService {
           .toList();
     });
   }
+
+  Stream<List<Job>> getUserJobs(String userId) {
+    return _jobsCollection.where('userId', isEqualTo: userId).snapshots().map((
+      snapshot,
+    ) {
+      return snapshot.docs
+          .map(
+            (doc) => Job.fromFirestore(
+              doc as DocumentSnapshot<Map<String, dynamic>>,
+            ),
+          )
+          .toList();
+    });
+  }
+
+  Stream<List<Job>> getMajstorJobs(String majstorId) {
+    return _jobsCollection
+        .where('assignedTo', isEqualTo: majstorId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map(
+                (doc) => Job.fromFirestore(
+                  doc as DocumentSnapshot<Map<String, dynamic>>,
+                ),
+              )
+              .toList();
+        });
+  }
 }
 
 class Job {

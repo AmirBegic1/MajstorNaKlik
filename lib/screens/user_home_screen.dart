@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:majstor_na_klik_app/main.dart';
+import 'package:majstor_na_klik_app/screens/messages_screen.dart';
+import 'package:majstor_na_klik_app/screens/profile_screen.dart';
+import 'package:majstor_na_klik_app/screens/user_jobs_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/category_service.dart';
 
@@ -105,11 +108,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ),
         );
       case 1:
-        return const Center(child: Text('Moji poslovi za korisnika'));
+        return const UserJobsScreen();
       case 2:
-        return const Center(child: Text('Poruke za korisnika'));
+        return const MessagesScreen();
       case 3:
-        return const Center(child: Text('Profil korisnika'));
+        return const ProfileScreen();
       default:
         return const Center(child: Text('Greška'));
     }

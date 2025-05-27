@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:majstor_na_klik_app/screens/majstor_jobs_screen.dart';
+import 'package:majstor_na_klik_app/screens/messages_screen.dart';
+import 'package:majstor_na_klik_app/screens/profile_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/job_service.dart';
 
@@ -86,11 +89,11 @@ class _MajstorDashboardState extends State<MajstorDashboard> {
           ),
         );
       case 1:
-        return const Center(child: Text('Moji poslovi (aktivni) za majstora'));
+        return const MajstorJobsScreen();
       case 2:
-        return const Center(child: Text('Poruke za majstora'));
+        return const MessagesScreen();
       case 3:
-        return const Center(child: Text('Profil majstora'));
+        return const ProfileScreen();
       default:
         return const Center(child: Text('Greška'));
     }
