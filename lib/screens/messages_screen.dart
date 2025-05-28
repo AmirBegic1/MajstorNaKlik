@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './chat_screen.dart';
 import '../models/chat_message.dart';
 import './new_chat_screen.dart';
+import './majstor_details_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({Key? key}) : super(key: key);
@@ -65,7 +66,7 @@ class MessagesScreen extends StatelessWidget {
                           chatInfo['lastMessage'] as ChatMessage?;
                       // Sada 'chatId' je String, pa možemo koristiti replaceAll
                       final otherUserId = chatId
-                          .replaceAll(currentUserId!, '')
+                          .replaceAll(currentUserId, '')
                           .replaceAll('_', '');
 
                       return Card(
@@ -112,14 +113,36 @@ class MessagesScreen extends StatelessWidget {
                   );
                 },
               ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NewChatScreen()),
-          );
-        },
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewChatScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 16.0),
+          FloatingActionButton(
+            // Novi gumb za testiranje
+            child: const Icon(Icons.person_search),
+            onPressed: () {
+              // Zamijenite 'NEKI_ID_MAJSTORA' sa stvarnim ID-jem majstora iz vaše baze
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => const MajstorDetailsScreen(
+                        majstorId: 'NEKI_ID_MAJSTORA',
+                      ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

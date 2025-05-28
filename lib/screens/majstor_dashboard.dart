@@ -4,6 +4,7 @@ import 'package:majstor_na_klik_app/screens/messages_screen.dart';
 import 'package:majstor_na_klik_app/screens/profile_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/job_service.dart';
+import './majstor_list_screen.dart';
 
 class MajstorDashboard extends StatefulWidget {
   const MajstorDashboard({Key? key}) : super(key: key);
@@ -51,6 +52,18 @@ class _MajstorDashboardState extends State<MajstorDashboard> {
               const Text(
                 'Novi zahtjevi za posao',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MajstorListScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Pronađi majstore'),
               ),
               const SizedBox(height: 10.0),
               Expanded(

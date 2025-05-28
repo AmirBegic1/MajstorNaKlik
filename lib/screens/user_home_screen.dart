@@ -5,6 +5,7 @@ import 'package:majstor_na_klik_app/screens/profile_screen.dart';
 import 'package:majstor_na_klik_app/screens/user_jobs_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/category_service.dart';
+import './majstor_list_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Početna')),
+      // appBar: AppBar(title:  Text('Početna')),
       body: _getPage(
         _selectedIndex,
       ), // Prikazujemo različite stranice ovisno o indeksu
@@ -61,6 +62,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   // TODO: Implementirajte logiku pretrage
                   print('Pretraga: $value');
                 },
+              ),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MajstorListScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Pronađi majstore'),
               ),
               const SizedBox(height: 20.0),
               const Text(
