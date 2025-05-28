@@ -186,10 +186,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         print('Otvori pomoć');
                       },
                     ),
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      'Napredne opcije',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    ListTile(
+                      leading: const Icon(Icons.construction),
+                      title: const Text('Želim postati majstor'),
+                      onTap: () {
+                        // TODO: Implementirajte logiku za prelazak na majstora
+                        _showBecomeMasterDialog(context);
+                      },
+                    ),
                     // Dodatne opcije specifične za majstora (kasnije)
                   ],
                 ),
               ),
     );
   }
+}
+
+void _showBecomeMasterDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Postani majstor?'),
+        content: const Text(
+          'Želite li se registrirati kao majstor? Nakon potvrde, moći ćete unijeti dodatne informacije o vašim vještinama i uslugama.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Odustani'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Potvrdi'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToEditProfileForMaster(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _navigateToEditProfileForMaster(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const EditProfileScreen(isBecomingMaster: true),
+    ),
+  );
 }
