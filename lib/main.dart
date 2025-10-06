@@ -11,8 +11,16 @@ import 'package:majstor_na_klik_app/screens/user_home_screen.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-const Color primaryBlue = Color(0xFF007BFF);
-const Color accentOrange = Color(0xFFFFA500);
+// Modern Color Palette
+const Color primaryBlue = Color(0xFF1976D2);
+const Color primaryBlueLight = Color(0xFF42A5F5);
+const Color primaryBlueDark = Color(0xFF0D47A1);
+const Color accentOrange = Color(0xFFFF9800);
+const Color accentOrangeLight = Color(0xFFFFB74D);
+const Color accentGreen = Color(0xFF4CAF50);
+const Color accentRed = Color(0xFFE57373);
+const Color surfaceGrey = Color(0xFFF5F5F5);
+const Color cardGrey = Color(0xFFFAFAFA);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,51 +46,125 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Majstor na Klik.ba',
       theme: ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: primaryBlue,
           primary: primaryBlue,
+          secondary: accentOrange,
+          surface: surfaceGrey,
+          brightness: Brightness.light,
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 16.0,
-            horizontal: 12.0,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: primaryBlue,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
+        ),
+        cardTheme: CardThemeData(
+          color: cardGrey,
+          elevation: 2,
+          shadowColor: Colors.black12,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: primaryBlue, width: 2.0),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.red, width: 2.0),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.red, width: 2.0),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          hintStyle: TextStyle(color: Colors.grey[600]),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: primaryBlue,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
-            textStyle: const TextStyle(fontSize: 16),
+            elevation: 3,
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: accentOrange),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: accentOrange,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 16.0,
+            horizontal: 16.0,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.grey, width: 0.5),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: primaryBlue, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          labelStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+          hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
         ),
+        chipTheme: ChipThemeData(
+          backgroundColor: surfaceGrey,
+          selectedColor: primaryBlue,
+          labelStyle: const TextStyle(color: Colors.black87),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            color: Colors.black54,
+          ),
+        ),
+        scaffoldBackgroundColor: surfaceGrey,
       ),
       home: const AuthCheck(),
       routes: {
@@ -95,7 +177,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthCheck extends StatelessWidget {
-  const AuthCheck({Key? key}) : super(key: key);
+  const AuthCheck({super.key});
 
   @override
   Widget build(BuildContext context) {

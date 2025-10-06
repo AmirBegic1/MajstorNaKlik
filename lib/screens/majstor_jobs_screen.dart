@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/job_service.dart'; // Pretpostavljamo da koristite postojeći JobService
+import './job_details_screen.dart';
 
 class MajstorJobsScreen extends StatelessWidget {
-  const MajstorJobsScreen({Key? key}) : super(key: key);
+  const MajstorJobsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class MajstorJobsScreen extends StatelessWidget {
                     itemCount: majstorJobs.length,
                     itemBuilder: (context, index) {
                       final job = majstorJobs[index];
-                      return _buildJobCard(job);
+                      return _buildJobCard(context, job);
                     },
                   );
                 },
@@ -48,7 +49,7 @@ class MajstorJobsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildJobCard(Job job) {
+  Widget _buildJobCard(BuildContext context, Job job) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Padding(
@@ -73,8 +74,16 @@ class MajstorJobsScreen extends StatelessWidget {
               children: <Widget>[
                 TextButton(
                   onPressed: () {
-                    // TODO: Implementirajte navigaciju na detalje posla za majstora
-                    print('Pogledaj detalje posla: ${job.id}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => JobDetailsScreen(
+                              jobId: job.id,
+                              isMajstor: true,
+                            ),
+                      ),
+                    );
                   },
                   child: const Text('Pogledaj detalje'),
                 ),

@@ -4,7 +4,7 @@ import '../providers/login_provider.dart'; // Putanja do vašeg LoginProvider fa
 import '../main.dart'; // Za konstantne boje (ako koristite)
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

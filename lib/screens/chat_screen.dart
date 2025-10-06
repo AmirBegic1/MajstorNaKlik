@@ -8,10 +8,10 @@ class ChatScreen extends StatefulWidget {
   final String receiverUserId; // Trebat će vam ID drugog korisnika
 
   const ChatScreen({
-    Key? key,
+    super.key,
     required this.conversationId,
     required this.receiverUserId,
-  }) : super(key: key);
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();

@@ -7,8 +7,7 @@ import './chat_screen.dart';
 class MajstorDetailsScreen extends StatefulWidget {
   final String majstorId;
 
-  const MajstorDetailsScreen({Key? key, required this.majstorId})
-    : super(key: key);
+  const MajstorDetailsScreen({super.key, required this.majstorId});
 
   @override
   State<MajstorDetailsScreen> createState() => _MajstorDetailsScreenState();
@@ -62,8 +61,8 @@ class _MajstorDetailsScreenState extends State<MajstorDetailsScreen> {
   void _startChat(BuildContext context) async {
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserId != null && widget.majstorId.isNotEmpty) {
-      final ChatService _chatService = ChatService();
-      final String? conversationId = await _chatService.startChat(
+      final ChatService chatService = ChatService();
+      final String? conversationId = await chatService.startChat(
         widget.majstorId,
       );
       if (conversationId != null) {

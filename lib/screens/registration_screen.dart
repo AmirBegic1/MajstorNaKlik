@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/registration_provider.dart'; // Putanja do vašeg RegistrationProvider fajla
 
 class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
+  const RegistrationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

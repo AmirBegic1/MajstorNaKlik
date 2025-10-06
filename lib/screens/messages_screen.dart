@@ -8,7 +8,7 @@ import './new_chat_screen.dart';
 import './majstor_details_screen.dart';
 
 class MessagesScreen extends StatelessWidget {
-  const MessagesScreen({Key? key}) : super(key: key);
+  const MessagesScreen({super.key});
 
   Future<String?> _getUserName(String userId) async {
     try {
@@ -29,7 +29,7 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatService _chatService = ChatService();
+    final ChatService chatService = ChatService();
     final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
@@ -38,7 +38,7 @@ class MessagesScreen extends StatelessWidget {
           currentUserId == null
               ? const Center(child: Text('Niste prijavljeni.'))
               : StreamBuilder<List<Map<String, dynamic>>>(
-                stream: _chatService.getUserChatsWithLastMessage(),
+                stream: chatService.getUserChatsWithLastMessage(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(

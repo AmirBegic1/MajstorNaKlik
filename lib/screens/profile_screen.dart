@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:majstor_na_klik_app/screens/edit_profile_screen.dart';
+import './storage_test_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -184,6 +185,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         // TODO: Implementirajte navigaciju na pomoć
                         print('Otvori pomoć');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.cloud_upload),
+                      title: const Text('Test Storage'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StorageTestScreen(),
+                          ),
+                        );
                       },
                     ),
                     const SizedBox(height: 20.0),

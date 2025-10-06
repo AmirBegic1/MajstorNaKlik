@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './majstor_details_screen.dart'; // Import MajstorDetailsScreen
 
 class MajstorListScreen extends StatelessWidget {
-  const MajstorListScreen({Key? key}) : super(key: key);
+  const MajstorListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

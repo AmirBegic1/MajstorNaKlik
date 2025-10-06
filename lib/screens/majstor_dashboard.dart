@@ -5,9 +5,10 @@ import 'package:majstor_na_klik_app/screens/profile_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/job_service.dart';
 import './majstor_list_screen.dart';
+import './job_details_screen.dart';
 
 class MajstorDashboard extends StatefulWidget {
-  const MajstorDashboard({Key? key}) : super(key: key);
+  const MajstorDashboard({super.key});
 
   @override
   State<MajstorDashboard> createState() => _MajstorDashboardState();
@@ -92,7 +93,7 @@ class _MajstorDashboardState extends State<MajstorDashboard> {
                     return ListView.builder(
                       itemCount: jobs.length,
                       itemBuilder: (context, i) {
-                        return _buildJobRequestCard(jobs[i]);
+                        return _buildJobRequestCard(context, jobs[i]);
                       },
                     );
                   },
@@ -112,7 +113,10 @@ class _MajstorDashboardState extends State<MajstorDashboard> {
     }
   }
 
-  Widget _buildJobRequestCard(Job job) {
+  Widget _buildJobRequestCard(BuildContext context, Job job) {
+    Color priorityColor = _getPriorityColor(job.priority);
+    String priorityText = _getPriorityText(job.priority);
+
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -122,35 +126,120 @@ class _MajstorDashboardState extends State<MajstorDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              job.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    job.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                if (job.priority != 'medium')
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: priorityColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      priorityText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 5.0),
+            const SizedBox(height: 8.0),
             Row(
               children: <Widget>[
                 const Icon(Icons.location_on, color: Colors.grey, size: 16.0),
                 const SizedBox(width: 5.0),
                 Text(job.location, style: const TextStyle(color: Colors.grey)),
+                const Spacer(),
+                if (job.budget != null) ...[
+                  const Icon(Icons.attach_money, size: 16, color: Colors.green),
+                  Text(
+                    '${job.budget!.toStringAsFixed(0)} KM',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 8.0),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Implementirajte navigaciju na detalje posla
-                  print('Pogledaj detalje posla: ${job.id}');
-                },
-                child: const Text('Pogledaj detalje'),
-              ),
+            Text(
+              job.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black87),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                Text(
+                  '${job.createdAt.day}.${job.createdAt.month}.${job.createdAt.year}.',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => JobDetailsScreen(
+                              jobId: job.id,
+                              isMajstor: true,
+                            ),
+                      ),
+                    );
+                  },
+                  child: const Text('Pogledaj detalje'),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Color _getPriorityColor(String priority) {
+    switch (priority.toLowerCase()) {
+      case 'low':
+        return Colors.green;
+      case 'high':
+        return Colors.orange;
+      case 'urgent':
+        return Colors.red;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  String _getPriorityText(String priority) {
+    switch (priority.toLowerCase()) {
+      case 'low':
+        return 'NIZAK';
+      case 'medium':
+        return 'SREDNJI';
+      case 'high':
+        return 'VISOK';
+      case 'urgent':
+        return 'HITNO';
+      default:
+        return priority.toUpperCase();
+    }
   }
 }

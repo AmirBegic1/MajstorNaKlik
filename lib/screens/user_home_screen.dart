@@ -6,9 +6,10 @@ import 'package:majstor_na_klik_app/screens/user_jobs_screen.dart';
 import '../widgets/main_bottom_navigation_bar.dart'; // Putanja do BottomNavigationBar
 import '../services/category_service.dart';
 import './majstor_list_screen.dart';
+import './create_job_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
-  const UserHomeScreen({Key? key}) : super(key: key);
+  const UserHomeScreen({super.key});
 
   @override
   State<UserHomeScreen> createState() => _UserHomeScreenState();
@@ -27,6 +28,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     });
   }
 
+  Future<void> _navigateToCreateJob() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateJobScreen()),
+    );
+
+    // Ako je job uspješno kreiran, možemo refreshovati listu
+    if (result == true && _selectedIndex == 1) {
+      setState(() {}); // Refreshuje UserJobsScreen
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +51,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         currentIndex: _selectedIndex,
         onTabChanged: _onTabChanged,
       ),
+      floatingActionButton:
+          _selectedIndex == 0 || _selectedIndex == 1
+              ? FloatingActionButton.extended(
+                onPressed: _navigateToCreateJob,
+                icon: const Icon(Icons.add_task),
+                label: const Text('Novi posao'),
+                backgroundColor: primaryBlue,
+                foregroundColor: Colors.white,
+              )
+              : null,
     );
   }
 

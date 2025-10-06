@@ -3,7 +3,7 @@ import '../services/chat_service.dart';
 import './chat_screen.dart';
 
 class NewChatScreen extends StatefulWidget {
-  const NewChatScreen({Key? key}) : super(key: key);
+  const NewChatScreen({super.key});
 
   @override
   State<NewChatScreen> createState() => _NewChatScreenState();
